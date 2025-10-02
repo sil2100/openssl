@@ -1606,6 +1606,9 @@ ossl_ml_kem_key_reset(ML_KEM_KEY *key)
     if (key->t != NULL) {
         if (ossl_ml_kem_have_prvkey(key))
             OPENSSL_secure_clear_free(key->s, key->vinfo->prvalloc);
+#ifdef OPENSSL_PEDANTIC_ZEROIZATION
+        OPENSSL_cleanse(key->t, key->vinfo->puballoc);
+#endif
         OPENSSL_free(key->t);
     }
     key->d = key->z = key->seedbuf = key->encoded_dk =
